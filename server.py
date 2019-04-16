@@ -39,3 +39,23 @@ def profile():
 @app.route("/search", methods = ["POST"])
 def search():
     return
+
+@app.route("/createProcedure", methods = ["POST"])
+def createProcedure():
+    return
+
+@app.route("/createPatient", methods = ["POST, GET"])
+def createPatient():
+    return
+
+@app.route("/createStaff", methods = ["POST", "GET"])
+def createStaff():
+    return
+
+@app.route("/staff/<s_id>", methods = ["GET"])
+def staff(s_id):
+    return
+
+@app.route("/patient/<p_id>", methods = ["GET"])
+def patient(p_id):
+    return
