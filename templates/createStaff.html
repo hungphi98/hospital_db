@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Create Staff</title>
+    </head>
+    <body>
+      <form action="{{ url_for('create staff') }}" method="post">
+            <div>
+                <p> First Name </p>
+                <input name="fname" type="text" placeholder="First name">
+            </div>
+            <div>
+                <p> Last Name </p>
+                <input name="lname" type="text" placeholder="Last name">
+            </div>
+            <div>
+                <p> Address </p>
+                <input name="address" type="text" placeholder="Address">
+            </div>
+            <div>
+                <p> Phone </p>
+                <input name="phone" type="text" placeholder="Phone">
+            </div>
+            <div>
+                <p> Department </p>
+                <select class = "form-control" id="department_type" name = "department_type">
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Cardio">Cardiology</option>
+                </select>
+            </div>
+            <div>
+                <p> Staff Type </p>
+		<select class = "form-control" id="search_type" name = "query_type">
+                	<option value="Pediatrics">Admin</option>
+                	<option value="Cardio">Non-Admin</option>
+            	</select>
+            </div>
+	    <div>
+              <button> Create Staff </button>
+            </div>
+        </form>
+    </body>
+</html>
