@@ -3,6 +3,17 @@
         <title>Welcome</title>
     </head>
     <body>
-        
+    <div>
+        <form action = "/search" method = "POST">
+            <label for="search_type">Search by</label>
+            <select class = "form-control" id="search_type" name = "query_type">
+                <option value="Patient Name">Name</option>
+                <option value="Patient ID">Patient ID</option>
+                <option value="Staff Name">Staff Name</option>
+                <option value="Staff ID">Staff ID</option>
+            </select>
+            <input class="form-control" name="info" placeholder="Search">
+        </form>
+    </div>
     </body>
 </html>

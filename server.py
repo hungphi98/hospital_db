@@ -31,3 +31,11 @@ app = Flask(__name__)
 def login():
     if request.method == "GET":
         return render_template("login.html")
+
+@app.route("/profile", methods = ["GET"])
+def profile():
+    template = env.get_template('profile.html')
+    return template.render()
+@app.route("/search", methods = ["POST"])
+def search():
+    return
