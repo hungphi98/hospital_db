@@ -40,13 +40,18 @@ def profile():
 def search():
     return
 
-@app.route("/createProcedure", methods = ["POST"])
+@app.route("/createProcedure", methods = ["POST", "GET"])
 def createProcedure():
-    return
+    if request.method == "GET":
+        template = env.get_template('createProcedure.html')
+        return template.render()
+
 
 @app.route("/createPatient", methods = ["POST, GET"])
 def createPatient():
-    return
+    if request.method == "GET":
+        template = env.get_template('createPatient.html')
+        return template.render()
 
 @app.route("/createStaff", methods = ["POST", "GET"])
 def createStaff():
