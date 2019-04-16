@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Create Patient</title>
+    </head>
+    <body>
+      <form action="{{ url_for('create patient') }}" method="post">
+            <div>
+                <p> First Name </p>
+                <input name="fname" type="text" placeholder="First name">
+            </div>
+            <div>
+                <p> Last Name </p>
+                <input name="lname" type="text" placeholder="Last name">
+            </div>
+            <div>
+                <p> Date of birth </p>
+                <input name="dob" type="text" placeholder="DOB">
+            </div>
+            <div>
+                <p> Address </p>
+                <input name="address" type="text" placeholder="Address">
+            </div>
+            <div>
+                <p> Phone </p>
+                <input name="phone" type="text" placeholder="Phone">
+            </div>
+            <div>
+                <p> Sex </p>
+                <input name="sex" type="text" placeholder="Sex">
+            </div>
+            <div>
+                <p> Height </p>
+                <input name="height" type="text" placeholder="Height">
+            </div>
+            <div>
+                <p> Weight </p>
+                <input name="weight" type="text" placeholder="Weight">
+            </div>
+	    <div>
+              <button> Create Patient </button>
+            </div>
+        </form>
+    </body>
+</html>
