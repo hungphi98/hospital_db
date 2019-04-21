@@ -1,0 +1,11 @@
+{
+  "database": {
+    "host": "",
+    "db": "",
+    "user": "",
+    "password": ""
+  },
+  "system": {
+    "bind_port": 9001
+  }
+}
