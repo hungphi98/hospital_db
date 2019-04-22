@@ -5,6 +5,7 @@ from flask import Flask, session, render_template, request,redirect, url_for, fl
 import psycopg2
 from jinja2 import Environment, PackageLoader, select_autoescape
 import csv
+import json
 
 env = Environment(
     loader=PackageLoader('server', 'templates'),
@@ -28,8 +29,8 @@ host = base_config["database"]["host"]
 db = base_config["database"]["db"]
 username = base_config["database"]["user"]
 password = base_config["database"]["password"]
-db_conn = psycopg2.connect(host=host, database=db,
-                           user=username, password=password)
+#db_conn = psycopg2.connect(host=host, database=db,
+#                           user=username, password=password)
 bind_port = base_config["system"]["bind_port"]
 
 # Configure session to use filesystem
