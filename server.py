@@ -5,6 +5,7 @@ from flask import Flask, session, render_template, request,redirect, url_for, fl
 import psycopg2
 from jinja2 import Environment, PackageLoader, select_autoescape
 import csv
+import json
 
 env = Environment(
     loader=PackageLoader('server', 'templates'),
@@ -13,14 +14,29 @@ env = Environment(
 
 app = Flask(__name__)
 
-#Set the DATABASE_URL
-DATABASE= "host = 'bowie.cs.earlham.edu' dbname = 'phnguyen17_db' user = 'phnguyen17'  password='abc.123'"
+db_conn = None
+base_config = {}
+
+def load_config(filename):
+    with open(filename, "r") as config:
+        return json.load(config)
+
+# App Configurations / Settings
+base_config = load_config("server.json")
+app.logger.info("Connecting to postgres...")
+# Connect to database
+host = base_config["database"]["host"]
+db = base_config["database"]["db"]
+username = base_config["database"]["user"]
+password = base_config["database"]["password"]
+#db_conn = psycopg2.connect(host=host, database=db,
+#                           user=username, password=password)
+bind_port = base_config["system"]["bind_port"]
+
 # Configure session to use filesystem
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 # Session(app)
-
-conn = psycopg2.connect(DATABASE)
 
 @app.route('/', methods = ["GET","POST"])
 def login():
