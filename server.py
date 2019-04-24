@@ -29,8 +29,9 @@ host = base_config["database"]["host"]
 db = base_config["database"]["db"]
 username = base_config["database"]["user"]
 password = base_config["database"]["password"]
-#db_conn = psycopg2.connect(host=host, database=db,
-#                           user=username, password=password)
+db_conn = psycopg2.connect(host=host, database=db,
+                          user=username, password=password)
+cur = db_conn.cursor()
 bind_port = base_config["system"]["bind_port"]
 
 # Configure session to use filesystem
@@ -42,6 +43,18 @@ app.config["SESSION_TYPE"] = "filesystem"
 def login():
     if request.method == "GET":
         return render_template("login.html")
+    elif request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        cur.execute("SELECT * FROM users WHERE username = '{}' AND password = '{}'".format(username,password))
+        x = cur.fetchone()
+        print(username, file= sys.stderr)
+        if x is not None:
+            return redirect("/profile")
+        else:
+            flash("Wrong username or password")
+            return redirect("/")
+        
 
 @app.route("/profile", methods = ["GET"])
 def profile():
