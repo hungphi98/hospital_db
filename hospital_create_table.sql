@@ -21,3 +21,5 @@ create table medications(m_id int, name varchar(30), purpose varchar(100), cost 
 create table prescribed(ph_id int, m_id int, dosage varchar(15));
 
 create table bills(p_id int, b_id int, start_date timestamp, end_date timestamp, total_cost numeric, total_paid numeric);
+
+create table users(username VARCHAR(32), password VARCHAR(32), s_id serial, PRIMARY KEY(username));

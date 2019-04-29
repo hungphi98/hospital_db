@@ -39,6 +39,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 # Session(app)
 
+
 @app.route('/', methods = ["GET","POST"])
 def login():
     if request.method == "GET":
@@ -60,10 +61,36 @@ def login():
 def profile():
     template = env.get_template('profile.html')
     return template.render()
-@app.route("/search", methods = ["POST"])
+@app.route("/search", methods = ["GET"])
 def search():
-    return
-
+    query_type = request.form.get("query_type")
+    info = request.form.get("search")
+    sql = ""
+    if query_type == "Patient Name":
+        sql = "SELECT * FROM Patient WHERE f_name LIKE '%%{}%%' OR l_name LIKE '%%{}%%';".format(info, info)
+        patients = cur.fetchall()
+        template = env.get_template('search_result.html')
+        return template.render(staffs = staff)
+    elif query_type == "Patient ID":
+        sql = "SELECT * FROM Patient WHERE p_id = {}".format(info)
+        cur.execute(sql)
+        patients = cur.fetchall()
+        template = env.get_template('search_result.html')
+        return template.render(staffs = staff)
+    elif query_type == "Staff Name":
+        sql = "SELECT * FROM Staff WHERE f_name LIKE '%%{}%%' OR l_name LIKE '%%{}%%';".format(info,info)
+        cur.execute(sql)
+        staff = cur.fetchall()
+        template = env.get_template('search_result.html')
+        return template.render(staffs = staff)
+    elif query_type == "Staff ID":
+        sql = "SELECT * FROM Staff WHERE s_id = {}".format(info)
+        cur.execute(sql)
+        staff = cur.fetchall()
+        template = env.get_template('search_result.html')
+        return template.render(staffs = staff)
+    template = env.get_template('search_result.html')
+    return template.render()
 @app.route("/createProcedure", methods = ["POST", "GET"])
 def createProcedure():
     if request.method == "GET":
