@@ -21,3 +21,5 @@ create table medications(m_id serial, name varchar(30), purpose varchar(100), co
 create table prescribed(ph_id int REFERENCES patient_history, m_id int REFERENCES medications, dosage varchar(15));
 
 create table bills(b_id serial, p_id int REFERENCES patient, start_date timestamp, end_date timestamp, total_cost numeric, total_paid numeric, primary key (b_id));
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN Schema public TO public;
