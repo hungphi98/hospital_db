@@ -1,8 +1,8 @@
 create table patient(p_id serial, f_name varchar(30), l_name varchar(30), age int, dob DATE, address varchar(30), phone_number varchar(15), sex char(1), height numeric, weight numeric, primary key (p_id));
 
-create table staff(s_id serial, f_name varchar(30), l_name varchar(30), address varchar(30), phone_number varchar(15), s_type varchar(10), d_id int REFERENCES hospital_department, username VARCHAR(32), password VARCHAR(32), primary key(s_id));
-
 create table hospital_department(d_id serial, dept_name varchar(50), office_info varchar(50), visit_cost numeric, primary key(d_id));
+
+create table staff(s_id serial, f_name varchar(30), l_name varchar(30), address varchar(30), phone_number varchar(15), s_type varchar(10), d_id int REFERENCES hospital_department, username VARCHAR(32), password VARCHAR(32), primary key(s_id));
 
 create table insurance_company(ip_id serial, name varchar(50), policy_id int, phone_number varchar(15), primary key(ip_id));
 
