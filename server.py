@@ -61,32 +61,35 @@ def login():
 def profile():
     template = env.get_template('profile.html')
     return template.render()
-@app.route("/search", methods = ["GET"])
+@app.route("/search", methods = ["POST"])
 def search():#phi
     query_type = request.form.get("query_type")
     info = request.form.get("search")
+    print(query_type, info, file = sys.stderr)
     sql = ""
     if query_type == "Patient Name":
-        sql = "SELECT * FROM Patient WHERE f_name LIKE '%%{}%%' OR l_name LIKE '%%{}%%';".format(info, info)
+        sql = "SELECT * FROM patient WHERE f_name LIKE '%%{}%%' OR l_name LIKE '%%{}%%';".format(info, info)
         patients = cur.fetchall()
         template = env.get_template('search_result.html')
-        return template.render(staffs = staff)
+        return template.render(staffs = patients)
     elif query_type == "Patient ID":
-        sql = "SELECT * FROM Patient WHERE p_id = {}".format(info)
+        sql = "SELECT * FROM patient WHERE p_id = {}".format(info)
         cur.execute(sql)
         patients = cur.fetchall()
         template = env.get_template('search_result.html')
-        return template.render(staffs = staff)
+        return template.render(staffs = patients)
     elif query_type == "Staff Name":
-        sql = "SELECT * FROM Staff WHERE f_name LIKE '%%{}%%' OR l_name LIKE '%%{}%%';".format(info,info)
+        sql = "SELECT * FROM staff WHERE f_name LIKE '%{}%' OR l_name LIKE '%{}%';".format(info,info)
         cur.execute(sql)
         staff = cur.fetchall()
+        print(staff, file = sys.stderr)
         template = env.get_template('search_result.html')
         return template.render(staffs = staff)
     elif query_type == "Staff ID":
-        sql = "SELECT * FROM Staff WHERE s_id = {}".format(info)
+        sql = "SELECT * FROM staff WHERE s_id = {}".format(info)
         cur.execute(sql)
         staff = cur.fetchall()
+        print(staff, file = sys.stderr)
         template = env.get_template('search_result.html')
         return template.render(staffs = staff)
     template = env.get_template('search_result.html')
