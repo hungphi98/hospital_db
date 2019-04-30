@@ -7,16 +7,21 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <style>
+	table, th, td {
+  	border: 1px solid black;
+	}	
+  </style>
 </head>
 <body>
 
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
-    <form class="navbar-form navbar-left" action="/search">
+    <form class="navbar-form navbar-left" action="/search" method="post">
         <div class="input-group-btn">
             <label for="search_type" style="color: white">Search by</label>
             <select class = "form-control" id="search_type" name = "query_type">
-                <option value="Patient Name">Name</option>
+                <option value="Patient Name">Patient Name</option>
                 <option value="Patient ID">Patient ID</option>
                 <option value="Staff Name">Staff Name</option>
                 <option value="Staff ID">Staff ID</option>
@@ -34,12 +39,22 @@
 <div class="container">
    <div>
         <form action = "/staff" method = "post">
-            <ul id="navigation">
+		<table style = 'width: 100%'>
+			<tr>
+				<th>Staff ID</th>
+				<th>First name</th>
+				<th>Last name</th>
+				<th>Department</th>
+			</tr>
                 {% for item in staffs %}
-                <input type="submit" name = "staff" value = {{ item[2] }}>Click</input>
-                <li>{{ item }}</li>
+		<tr>
+			<td><input type = "submit" name = "staff" value = {{ item[0] }}></input></td>
+			<td>{{ item[1] }}</td>
+			<td>{{ item[2] }}</td>
+			<td>{{ item[6] }}</td>
+		</tr>
                 {% endfor %}
-            </ul>
+		</table>
         </form>
     </div>
 </div>
