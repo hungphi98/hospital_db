@@ -23,13 +23,13 @@ drop table if exists procedure_history cascade;
 create table procedure_history(ph_id int REFERENCES patient_history, s_id int REFERENCES staff);
 
 drop table if exists ward cascade;
-create table ward(p_id int REFERENCES patient, d_id int REFERENCES hospital_department, arrival timestamp, departure timestamp, cost_per_day numeric);
+create table ward(p_id int REFERENCES patient, d_id int REFERENCES hospital_department, arrival timestamp, departure timestamp, total_days numeric, cost_per_day numeric, total_cost numeric);
 
 drop table if exists medications cascade;
 create table medications(m_id serial, name varchar(30), purpose varchar(100), cost numeric, primary key(m_id));
 
 drop table if exists prescribed cascade;
-create table prescribed(ph_id int REFERENCES patient_history, m_id int REFERENCES medications, dosage varchar(15));
+create table prescribed(ph_id int REFERENCES patient_history, p_id int REFERENCES patient, m_id int REFERENCES medications, dosage varchar(15));
 
 drop table if exists bills cascade;
 create table bills(b_id serial, p_id int REFERENCES patient, start_date timestamp, end_date timestamp, total_cost numeric, total_paid numeric, primary key (b_id));
