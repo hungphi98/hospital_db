@@ -47,7 +47,7 @@ def login():
     elif request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        cur.execute("SELECT * FROM users WHERE username = '{}' AND password = '{}'".format(username,password))
+        cur.execute("SELECT * FROM staff WHERE username = '{}' AND password = '{}'".format(username,password))
         x = cur.fetchone()
         print(username, file= sys.stderr)
         if x is not None:
@@ -62,7 +62,7 @@ def profile():
     template = env.get_template('profile.html')
     return template.render()
 @app.route("/search", methods = ["GET"])
-def search():
+def search():#phi
     query_type = request.form.get("query_type")
     info = request.form.get("search")
     sql = ""
@@ -91,6 +91,7 @@ def search():
         return template.render(staffs = staff)
     template = env.get_template('search_result.html')
     return template.render()
+
 @app.route("/createProcedure", methods = ["POST", "GET"])
 def createProcedure():
     if request.method == "GET":
@@ -99,19 +100,19 @@ def createProcedure():
 
 
 @app.route("/createPatient", methods = ["POST, GET"])
-def createPatient():
+def createPatient():#
     if request.method == "GET":
         template = env.get_template('createPatient.html')
         return template.render()
 
 @app.route("/createStaff", methods = ["POST", "GET"])
-def createStaff():
+def createStaff():#phi
     return
 
 @app.route("/staff/<s_id>", methods = ["GET"])
-def staff(s_id):
+def staff(s_id):#ahsan
     return
 
 @app.route("/patient/<p_id>", methods = ["GET"])
-def patient(p_id):
+def patient(p_id):#ahsan
     return
