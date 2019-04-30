@@ -65,18 +65,19 @@ def profile():
 def search():#phi
     query_type = request.form.get("query_type")
     info = request.form.get("search")
-    print(query_type, info, file = sys.stderr)
+    
     sql = ""
     if query_type == "Patient Name":
-        sql = "SELECT * FROM patient WHERE f_name LIKE '%%{}%%' OR l_name LIKE '%%{}%%';".format(info, info)
+        sql = "SELECT * FROM patient WHERE f_name LIKE '%{}%' OR l_name LIKE '%{}%';".format(info, info)
+        cur.execute(sql)
         patients = cur.fetchall()
-        template = env.get_template('search_result.html')
+        template = env.get_template('patient_search_result.html')
         return template.render(staffs = patients)
     elif query_type == "Patient ID":
         sql = "SELECT * FROM patient WHERE p_id = {}".format(info)
         cur.execute(sql)
         patients = cur.fetchall()
-        template = env.get_template('search_result.html')
+        template = env.get_template('patient_search_result.html')
         return template.render(staffs = patients)
     elif query_type == "Staff Name":
         sql = "SELECT * FROM staff WHERE f_name LIKE '%{}%' OR l_name LIKE '%{}%';".format(info,info)

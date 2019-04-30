@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>Hospital Database</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <style>
+	table, th, td {
+  	border: 1px solid black;
+	}	
+  </style>
 </head>
 <body>
 
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
-    <form class="navbar-form navbar-left" action="/search" method= "post">
+    <form class="navbar-form navbar-left" action="/search" method="post">
         <div class="input-group-btn">
             <label for="search_type" style="color: white">Search by</label>
             <select class = "form-control" id="search_type" name = "query_type">
@@ -32,8 +37,28 @@
 </nav>
 
 <div class="container">
-  <h3>Wecome Doctor</h3>
-  <p></p>
+   <div>
+        <form action = "/staff" method = "post">
+		<table style = 'width: 100%'>
+			<tr>
+				<th>PatientID</th>
+				<th>First name</th>
+				<th>Last name</th>
+				<th>Date of Birth</th>
+				<th>Sex</th>
+			</tr>
+                {% for item in staffs %}
+		<tr>
+			<td><input type = "submit" name = "patient" value = {{ item[0] }}></input></td>
+			<td>{{ item[1] }}</td>
+			<td>{{ item[2] }}</td>
+			<td>{{ item[4] }}</td>
+			<td>{{ item[7] }}</td>
+		</tr>
+                {% endfor %}
+		</table>
+        </form>
+    </div>
 </div>
 
 </body>
