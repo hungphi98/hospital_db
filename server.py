@@ -72,13 +72,13 @@ def search():#phi
         cur.execute(sql)
         patients = cur.fetchall()
         template = env.get_template('patient_search_result.html')
-        return template.render(staffs = patients)
+        return template.render(patients = patients)
     elif query_type == "Patient ID":
         sql = "SELECT * FROM patient WHERE p_id = {}".format(info)
         cur.execute(sql)
         patients = cur.fetchall()
         template = env.get_template('patient_search_result.html')
-        return template.render(staffs = patients)
+        return template.render(patients = patients)
     elif query_type == "Staff Name":
         sql = "SELECT * FROM staff WHERE f_name LIKE '%{}%' OR l_name LIKE '%{}%';".format(info,info)
         cur.execute(sql)
@@ -111,7 +111,26 @@ def createPatient():#
 
 @app.route("/createStaff", methods = ["POST", "GET"])
 def createStaff():#phi
-    return
+    if request.method == "GET":
+        template = env.get_template('createStaff.html')
+        return template.render()
+    elif request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        fname = request.form.get("fname")
+        lname = request.form.get("lname")
+        address = request.form.get("address")
+        phone = request.form.get("phone")
+        department = request.form.get("department_type")
+        s_type = request.form.get("staff_type")
+        dsql = "SELECT d_id FROM hospital_department WHERE dept_name = '{}'".format(department)
+        cur.execute(dsql)
+        d_id = cur.fetchone()[0]
+        sql = """INSERT INTO staff (f_name, l_name, address, phone_number, s_type, d_id, username, password) 
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s);"""
+        cur.execute(sql, (fname, lname, address, phone, s_type, d_id, username,password))
+        db_conn.commit()
+        return redirect("/profile")
 
 @app.route("/staff/<s_id>", methods = ["GET"])
 def staff(s_id):#ahsan

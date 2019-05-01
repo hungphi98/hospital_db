@@ -4,7 +4,15 @@
         <title>Create Staff</title>
     </head>
     <body>
-      <form action="{{ url_for('create staff') }}" method="post">
+      <form action="/createStaff" method="post">
+	    <div>
+                <p> Username </p>
+                <input name="username" type="text" placeholder="username">
+            </div>
+	    <div>
+                <p> Password </p>
+                <input name="password" type="password">
+            </div>
             <div>
                 <p> First Name </p>
                 <input name="fname" type="text" placeholder="First name">
@@ -25,14 +33,14 @@
                 <p> Department </p>
                 <select class = "form-control" id="department_type" name = "department_type">
                         <option value="Pediatrics">Pediatrics</option>
-                        <option value="Cardio">Cardiology</option>
+                        <option value="Cardiology">Cardiology</option>
                 </select>
             </div>
             <div>
                 <p> Staff Type </p>
-		<select class = "form-control" id="search_type" name = "query_type">
-                	<option value="Pediatrics">Admin</option>
-                	<option value="Cardio">Non-Admin</option>
+		<select class = "form-control" id="staff_type" name = "staff_type">
+                	<option value="admin">Admin</option>
+                	<option value="non-admin">Non-Admin</option>
             	</select>
             </div>
 	    <div>
