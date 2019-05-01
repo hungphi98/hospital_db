@@ -5,25 +5,34 @@
     </head>
     <body>
 	<form action = "/createProcedure" method = "POST">
-		<div>
-		    <p> Procedure Name </p>
-		    <input name="Procedure Name" type="text" placeholder="Procedure Name">
-		</div>
-		<div>
-		    <p> Cost </p>
-		    <input name="Cost" type="text" placeholder="Cost">
-		</div>
-		<div>
-		    <p> Facility </p>
-		    <input name="Facility" type="text" placeholder="Facility">
-		</div>
-    <div>
+	
+	<div>
+	<p> Procedure Name </p>
+	 <input name="Procedure Name" type="text" placeholder="Procedure Name">
+	</div>
+	
+	<div>
+	 <p> Cost </p>
+	<input name="Cost" type="number" placeholder="Cost">
+	</div>
+	
+	<div>
+	<p> Facility </p>
+	<input name="Facility" type="text" placeholder="Facility">
+	</div>
+	
+	<div>
         <p> Per Hour? </p>
-        <input name="Per Hour?" type="text" placeholder="Per Hour?">
-    </div>
-		<div>
-		<button> Enter </button>
-		</div>
+       <select class = "form-control" id = "per_hour" name = "per_hour">
+	       <option value="Y">Yes</option>
+	       <option value="N">No</option>
+	</select>
+	</div>
+		
+	<div>
+	<button> Enter </button>
+	</div>
+	
 	</form>
     </body>
 </html>

@@ -104,7 +104,7 @@ def createProcedure():#jordan
         name = request.form.get("Procedure Name")
         cost = request.form.get("Cost")
         facility = request.form.get("Facility")
-        per_hour = request.form.get("Per Hour?")
+        per_hour = request.form.get("per_hour")
         cur.execute("INSERT into procedures (name, cost, facility, per_hour) VALUES (%s,%s,%s,%s)",(name, cost, facility, per_hour))
         db_conn.commit()
         return redirect("/")
