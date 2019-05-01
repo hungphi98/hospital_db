@@ -65,7 +65,6 @@ def profile():
 def search():#phi
     query_type = request.form.get("query_type")
     info = request.form.get("search")
-
     sql = ""
     if query_type == "Patient Name":
         sql = "SELECT * FROM patient WHERE f_name LIKE '%{}%' OR l_name LIKE '%{}%';".format(info, info)
@@ -100,6 +99,7 @@ def search():#phi
 def createProcedure():#jordan
     if request.method == "GET":
         template = env.get_template('createProcedure.html')
+        return template.render()
     elif request.method == "POST":
         name = request.form.get("Procedure Name")
         cost = request.form.get("Cost")
@@ -133,8 +133,11 @@ def createPatient():#jordan
 @app.route("/createStaff", methods = ["POST", "GET"])
 def createStaff():#phi
     if request.method == "GET":
+        sql = """SELECT * FROM hospital_department;"""
+        cur.execute(sql)
+        departments = cur.fetchall()
         template = env.get_template('createStaff.html')
-        return template.render()
+        return template.render(departments = departments)
     elif request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")

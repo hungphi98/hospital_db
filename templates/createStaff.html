@@ -32,8 +32,9 @@
             <div>
                 <p> Department </p>
                 <select class = "form-control" id="department_type" name = "department_type">
-                        <option value="Pediatrics">Pediatrics</option>
-                        <option value="Cardiology">Cardiology</option>
+                    {% for dept in departments %}
+                        <option value= {{ dept[1] }}> {{ dept[1] }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div>
