@@ -1,3 +1,5 @@
+select p_id,sum( cost) from patient_history natural join procedures group by p_id ;
+
 INSERT INTO patient(f_name, l_name, age, dob, address, phone_number, sex, height, weight) VALUES('John', 'Doe', 27, '1990-01-01', '801 National R W', '765-277-0909', 'M', 1.88, 70.3);
 INSERT INTO patient(f_name, l_name, age, dob, address, phone_number, sex, height, weight) VALUES('Sara', 'Doe', 21, '1985-05-31', '10 West Main St', '765-977-2324', 'F', 1.5, 200);
 INSERT INTO patient(f_name, l_name, age, dob, address, phone_number, sex, height, weight) VALUES('Roger', 'Jack', 50, '1969-09-13', '801 National R W', '765-277-0909', 'M', 1.88, 215.0);
