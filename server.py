@@ -100,25 +100,22 @@ def search():#phi
 def createProcedure():#jordan
     if request.method == "GET":
         template = env.get_template('createProcedure.html')
-    elif
+    elif request.method == "POST":
         name = request.form.get("Procedure Name")
         cost = request.form.get("Cost")
         facility = request.form.get("Facility")
         per_hour = request.form.get("Per Hour?")
-        cur.execute("INSERT into procedures (name, cost, facility, per_hour) VALUES ('{}', {}, '{}', '{}'".format(name, cost, facility, per_hour))
-        connection.commit()
-        return template.render()
-        print("New procedure sucessfully added")
-    else:
-        flash("Entry Unsuccessful")
+        cur.execute("INSERT into procedures (name, cost, facility, per_hour) VALUES (%s,%s,%s,%s)",(name, cost, facility, per_hour))
+        db_conn.commit()
         return redirect("/")
 
 
 
-@app.route("/createPatient", methods = ["POST, GET"])
+@app.route("/createPatient", methods = ["POST", "GET"])
 def createPatient():#jordan
     if request.method == "GET":
         template = env.get_template('createPatient.html')
+        return template.render()
     elif request.method == "POST":
         fname = request.form.get("fname")
         lname = request.form.get("lname")
@@ -129,13 +126,9 @@ def createPatient():#jordan
         sex = request.form.get("sex")
         height = request.form.get("height")
         weight = request.form.get("weight")
-        cur.execute("INSERT into patient (f_name, l_name, age, dob, address, phone_number, sex, height, weight) VALUES ('{}', '{}', {},'{}', '{}', '{}', '{}', {}, {});".format(fname, lname, age, dob, address, phone, sex, height, weight))
-        connection.commit()
-        return template.render()
-        print("Successfully Added New Patient")
-    else:
-        flash("Entry Unsuccessful")
-        return redirect("/")
+        cur.execute("""INSERT into patient (f_name, l_name, age, dob, address, phone_number, sex, height, weight) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);""",(fname, lname, age, dob, address, phone, sex, height, weight))
+        db_conn.commit()
+        return redirect("/profile")
 
 @app.route("/createStaff", methods = ["POST", "GET"])
 def createStaff():#phi
