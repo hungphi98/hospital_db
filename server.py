@@ -55,7 +55,7 @@ def login():
         else:
             flash("Wrong username or password")
             return redirect("/")
-        
+
 
 @app.route("/profile", methods = ["GET"])
 def profile():
@@ -65,7 +65,7 @@ def profile():
 def search():#phi
     query_type = request.form.get("query_type")
     info = request.form.get("search")
-    
+
     sql = ""
     if query_type == "Patient Name":
         sql = "SELECT * FROM patient WHERE f_name LIKE '%{}%' OR l_name LIKE '%{}%';".format(info, info)
@@ -97,17 +97,45 @@ def search():#phi
     return template.render()
 
 @app.route("/createProcedure", methods = ["POST", "GET"])
-def createProcedure():
+def createProcedure():#jordan
     if request.method == "GET":
         template = env.get_template('createProcedure.html')
+    elif
+        name = request.form.get("Procedure Name")
+        cost = request.form.get("Cost")
+        facility = request.form.get("Facility")
+        per_hour = request.form.get("Per Hour?")
+        cur.execute("INSERT into procedures (name, cost, facility, per_hour) VALUES ('{}', {}, '{}', '{}'".format(name, cost, facility, per_hour))
+        connection.commit()
         return template.render()
+        print("New procedure sucessfully added")
+    else:
+        flash("Entry Unsuccessful")
+        return redirect("/")
+
 
 
 @app.route("/createPatient", methods = ["POST, GET"])
-def createPatient():#
+def createPatient():#jordan
     if request.method == "GET":
         template = env.get_template('createPatient.html')
+    elif request.method == "POST":
+        fname = request.form.get("fname")
+        lname = request.form.get("lname")
+        age = request.form.get("age")
+        dob = request.form.get("dob")
+        address = request.form.get("address")
+        phone = request.form.get("phone")
+        sex = request.form.get("sex")
+        height = request.form.get("height")
+        weight = request.form.get("weight")
+        cur.execute("INSERT into patient (f_name, l_name, age, dob, address, phone_number, sex, height, weight) VALUES ('{}', '{}', {},'{}', '{}', '{}', '{}', {}, {});".format(fname, lname, age, dob, address, phone, sex, height, weight))
+        connection.commit()
         return template.render()
+        print("Successfully Added New Patient")
+    else:
+        flash("Entry Unsuccessful")
+        return redirect("/")
 
 @app.route("/createStaff", methods = ["POST", "GET"])
 def createStaff():#phi
