@@ -12,6 +12,35 @@
             </select>
             <input class="form-control" name="info" placeholder="Search">
         </form>
-    </div>
+        </div>
+        <div class="container">
+           <div>
+                <form action = "/staff" method = "post">
+                <table style = 'width: 100%'>
+                    <tr>
+                        <th>Staff ID</th>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Department</th>
+                        <th>Address</th>
+                        <th>Phone Number</th>
+                        <th>Type</th>
+                    </tr>
+                        {% for item in staff_sid %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[6] }}</td>
+                    <td>{{ item[3] }}</td>
+                    <td>{{ item[4] }}</td>
+                    <td>{{ item[5] }}</td>
+                </tr>
+                        {% endfor %}
+                </table>
+                </form>
+            </div>
+        </div>
+
     </body>
 </html>

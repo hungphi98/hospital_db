@@ -156,9 +156,16 @@ def createStaff():#phi
         db_conn.commit()
         return redirect("/profile")
 
-@app.route("/staff/<s_id>", methods = ["GET"])
-def staff(s_id):#ahsan
-    return
+@app.route("/staff", methods = ["GET", "POST"])
+def staff():#ahsan
+    s_id = request.form.get('staff')
+    sql = "SELECT * FROM staff WHERE s_id = {0};".format(s_id)
+    cur.execute(sql)
+    staff_sid = cur.fetchall()
+    print(staff_sid, file = sys.stderr)
+    template = env.get_template('staff.html')
+    return template.render(staff_sid = staff_sid)
+    #return "<h1>{0}</h1>".format(s_id)
 
 @app.route("/patient/<p_id>", methods = ["GET"])
 def patient(p_id):#ahsan
