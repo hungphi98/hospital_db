@@ -13,9 +13,8 @@
             <input class="form-control" name="info" placeholder="Search">
         </form>
         </div>
-        <div class="container">
+        <div class="container staff_info">
            <div>
-                <form action = "/staff" method = "post">
                 <table style = 'width: 100%'>
                     <tr>
                         <th>Staff ID</th>
@@ -38,7 +37,33 @@
                 </tr>
                         {% endfor %}
                 </table>
-                </form>
+            </div>
+        </div>
+        <div class="container patients">
+           <span>Patients Worked On</span>
+           <div>
+                <table style = 'width: 100%'>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Procedure</th>
+                        <th>Procedure History</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                    </tr>
+                {% for patient in patients %}
+                <tr>
+                    <td><a href="/patient.html/{{ patient[0] }}">{{ patient[0] }}</a></td>
+                    <td>{{ patient[1] }}</td>
+                    <td>{{ patient[2] }}</td>
+                    <td>{{ patient[4] }}</td>
+                    <td>{{ patient[5] }}</td>
+                    <td>{{ patient[6] }}</td>
+                    <td>{{ patient[7] }}</td>
+                </tr>
+                {% endfor %}
+                </table>
             </div>
         </div>
 

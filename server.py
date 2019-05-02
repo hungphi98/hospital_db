@@ -175,11 +175,21 @@ def staff():#ahsan
     sql = "SELECT * FROM staff WHERE s_id = {0};".format(s_id)
     cur.execute(sql)
     staff_sid = cur.fetchall()
-    print(staff_sid, file = sys.stderr)
+    sqlUsers = "select p_id, f_name, l_name, pr_id, name, ph_id, start_time, end_time from (select ph_id from procedure_history where s_id = {0}) as selectedPH natural join patient_history natural join procedures natural join patient;".format(s_id)
+    cur.execute(sqlUsers)
+    patients = cur.fetchall()
     template = env.get_template('staff.html')
-    return template.render(staff_sid = staff_sid)
+    return template.render(staff_sid = staff_sid, patients = patients)
     #return "<h1>{0}</h1>".format(s_id)
 
 @app.route("/patient/<p_id>", methods = ["GET"])
 def patient(p_id):#ahsan
-    return
+    sql = "SELECT * FROM staff WHERE p_id = {0};".format(p_id)
+    cur.execute(sql)
+    patient_sid = cur.fetchall()
+    sqlProc = "select * from (select s_id, pr_id, start_time, end_time, description from patient_history where p_id = {0}) as selectedHist natural join (select s_id, f_name, l_name from staff) as selectedStaff natural join (select pr_id, name as pr_name, facility from procedures) as selectedProc;".format(p_id)
+    cur.execute(sqlProc)
+    procedures = cur.fetchall()
+    template = env.get_template('patient.html')
+    return template.render(patient_sid = patient_sid, procedures = procedures)
+
