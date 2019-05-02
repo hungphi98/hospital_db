@@ -162,9 +162,11 @@ def staff():#ahsan
     sql = "SELECT * FROM staff WHERE s_id = {0};".format(s_id)
     cur.execute(sql)
     staff_sid = cur.fetchall()
-    print(staff_sid, file = sys.stderr)
+    sqlUsers = "select p_id, f_name, l_name, pr_id, name, ph_id, start_time, end_time from (select ph_id from procedure_history where s_id = {0}) as selectedPH natural join patient_history natural join procedures natural join patient;".format(s_id)
+    cur.execute(sqlUsers)
+    patients = cur.fetchall()
     template = env.get_template('staff.html')
-    return template.render(staff_sid = staff_sid)
+    return template.render(staff_sid = staff_sid, patients = patients)
     #return "<h1>{0}</h1>".format(s_id)
 
 @app.route("/patient/<p_id>", methods = ["GET"])
