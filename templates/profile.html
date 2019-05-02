@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>Welcome</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -32,8 +32,30 @@
 </nav>
 
 <div class="container">
-  <h3>Wecome Doctor</h3>
-  <p></p>
+  <h3>Wecome {{ name }}</h3>
+    <h4>Recent patients</h4>
+  <div>
+        <form action = "/staff" method = "post">
+		<table style = 'width: 100%'>
+			<tr>
+				<th>PatientID</th>
+				<th>First name</th>
+				<th>Last name</th>
+				<th>Date of Birth</th>
+				<th>Sex</th>
+			</tr>
+                {% for item in patients %}
+		<tr>
+			<td><input type = "submit" name = "patient" value = {{ item[0] }}></input></td>
+			<td>{{ item[1] }}</td>
+			<td>{{ item[2] }}</td>
+			<td>{{ item[3] }}</td>
+			<td>{{ item[4] }}</td>
+		</tr>
+                {% endfor %}
+		</table>
+        </form>
+    </div>
 </div>
 
 </body>

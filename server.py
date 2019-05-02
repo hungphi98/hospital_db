@@ -2,6 +2,7 @@ import os
 import sys
 
 from flask import Flask, session, render_template, request,redirect, url_for, flash, make_response
+from flask_session import Session
 import psycopg2
 from jinja2 import Environment, PackageLoader, select_autoescape
 import csv
@@ -37,9 +38,10 @@ bind_port = base_config["system"]["bind_port"]
 # Configure session to use filesystem
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
-# Session(app)
+Session(app)
 
-
+d_id = 0
+name = ""
 @app.route('/', methods = ["GET","POST"])
 def login():
     if request.method == "GET":
@@ -49,8 +51,9 @@ def login():
         password = request.form.get("password")
         cur.execute("SELECT * FROM staff WHERE username = '{}' AND password = '{}'".format(username,password))
         x = cur.fetchone()
-        print(username, file= sys.stderr)
         if x is not None:
+            session['d_id'] = x[0]
+            session['name'] = x[1]
             return redirect("/profile")
         else:
             flash("Wrong username or password")
@@ -59,8 +62,18 @@ def login():
 
 @app.route("/profile", methods = ["GET"])
 def profile():
+    d_id = session['d_id']
+    name = session['name']
+    sql = """SELECT patient.p_id, patient.f_name, patient.l_name, patient.dob, patient.sex \
+    FROM staff NATURAL JOIN patient_history INNER JOIN patient \
+    ON patient_history.p_id = patient.p_id WHERE d_id = {} ORDER BY end_time;""".format(d_id)
+    cur.execute(sql)
+    patients = cur.fetchall()
+    print(patients, file = sys.stderr)
+    if len(patients) > 5:
+        patients = patients[:5]
     template = env.get_template('profile.html')
-    return template.render()
+    return template.render(name = name, patients = patients)
 @app.route("/search", methods = ["POST"])
 def search():#phi
     query_type = request.form.get("query_type")
