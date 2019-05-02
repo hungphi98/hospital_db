@@ -35,7 +35,7 @@
   <h3>Wecome {{ name }}</h3>
     <h4>Recent patients</h4>
   <div>
-        <form action = "/staff" method = "post">
+        <form action = "/patient" method = "post">
 		<table style = 'width: 100%'>
 			<tr>
 				<th>PatientID</th>
@@ -56,6 +56,18 @@
 		</table>
         </form>
     </div>
+    {% if 'admin' in admin %}
+   <div>
+       <form action = "/createStaff" method = "get" >
+           <input type = "submit" value = "Create Staff"/>
+       </form>
+    </div>
+    <div>
+        <form action = "/createPatient" method = "get">
+            <input type = "submit" value = "Create Patient"/>
+        </form>
+    </div>
+    {% endif %}
 </div>
 
 </body>
