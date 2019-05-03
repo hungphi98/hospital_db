@@ -44,7 +44,7 @@ Session(app)
 d_id = 0
 name = ""
 @app.route('/', methods = ["GET","POST"])
-def login():
+def login():#phi
     if request.method == "GET":
         return render_template("login.html")
     elif request.method == "POST":
@@ -63,7 +63,7 @@ def login():
 
 
 @app.route("/profile", methods = ["GET"])
-def profile():
+def profile():#phi
     d_id = session['d_id']
     name = session['name']
     admin = session['admin']
@@ -166,7 +166,8 @@ def createStaff():#phi
         dsql = "SELECT d_id FROM hospital_department WHERE dept_name = '{}'".format(department)
         cur.execute(dsql)
         d_id = cur.fetchone()[0]
-        sql = """INSERT INTO staff (f_name, l_name, address, phone_number, s_type, d_id, username, password) 
+        sql = """INSERT INTO staff (f_name, l_name, address, \
+        phone_number, s_type, d_id, username, password) \
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s);"""
         cur.execute(sql, (fname, lname, address, phone, s_type, d_id, username,password))
         db_conn.commit()
@@ -197,7 +198,7 @@ def patient(p_id):#ahsan
     return template.render(patient_sid = patient_sid, procedures = procedures)
 
 @app.route("/startBill/<p_id>", methods = ["POST"])
-def startBill(p_id):
+def startBill(p_id):#phi
     sql = """INSERT INTO bills (p_id, start_date) VALUES (%s, %s)"""
     timenow = datetime.datetime.now()
     cur.execute(sql, (p_id, timenow))
@@ -205,7 +206,7 @@ def startBill(p_id):
     return redirect("/patient/"+p_id)
 
 @app.route("/showBill/<p_id>", methods = ["GET"])
-def showBill(p_id):
+def showBill(p_id):#phi
     med_sql = """SELECT name, purpose, dosage, s_id, description, end_time, cost \
     FROM medications NATURAL JOIN prescribed \
     NATURAL JOIN patient_history WHERE p_id = {} AND \
@@ -231,7 +232,7 @@ def showBill(p_id):
     
 
 @app.route("/endBill/<p_id>", methods = ["GET"])
-def endBill(p_id):
+def endBill(p_id):#phi
     timenow = datetime.datetime.now()
     costs = calBill(p_id)
     update_sql = """UPDATE bills SET end_time = %s \
@@ -243,8 +244,13 @@ def endBill(p_id):
     
         
 @app.route("/payBill/<p_id>", methods = ["POST"])
-def payBill(p_id):
-    paid = request.form.get("pay")
+def payBill(p_id):#phi
+    paid_str = request.form.get("pay")
+    paid = 0
+    try:
+        paid = float(paid)
+    except ValueError:
+        flash('Please enter an number')
     update_sql = """UPDATE bills SET paid = paid + %s \
     WHERE start_time = (SELECT MAX(start_time) FROM bills \
     WHERE p_id = '{}')""".format(p_id)
@@ -252,7 +258,7 @@ def payBill(p_id):
     db_conn.commit()
     return '<html><body><h1>Transaction is complete!</h1></body></html>'
 
-def calBill(p_id):
+def calBill(p_id):#phi
     bill_sql = """SELECT b_id FROM bills WHERE start_time = \
     (SELECT MAX(start_time) FROM bills WHERE p_id = {})""".format(p_id)
     cur.execute(bill_sql)
