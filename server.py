@@ -7,6 +7,7 @@ import psycopg2
 from jinja2 import Environment, PackageLoader, select_autoescape
 import csv
 import json
+import datetime
 
 env = Environment(
     loader=PackageLoader('server', 'templates'),
@@ -195,3 +196,85 @@ def patient(p_id):#ahsan
     template = env.get_template('patient.html')
     return template.render(patient_sid = patient_sid, procedures = procedures)
 
+@app.route("/startBill/<p_id>", methods = ["POST"])
+def startBill(p_id):
+    sql = """INSERT INTO bills (p_id, start_date) VALUES (%s, %s)"""
+    timenow = datetime.datetime.now()
+    cur.execute(sql, (p_id, timenow))
+    db_conn.commit()
+    return redirect("/patient/"+p_id)
+
+@app.route("/showBill/<p_id>", methods = ["GET"])
+def showBill(p_id):
+    med_sql = """SELECT name, purpose, dosage, s_id, description, end_time, cost \
+    FROM medications NATURAL JOIN prescribed \
+    NATURAL JOIN patient_history WHERE p_id = {} AND \
+    start_time > (SELECT MAX(start_time) FROM bills \
+    WHERE p_id = {})""".format(p_id, p_id)
+    cur.execute(med_sql)
+    meds = cur.fetchall()
+    
+    pr_sql = """SELECT name, facility, s_id, description, start_time, end_time, cost \
+    FROM procedures NATURAL JOIN patient_history \
+    WHERE p_id = {} AND start_time > (SELECT MAX(start_time) \
+    FROM bills WHERE p_id = {});""".format(p_id, p_id)
+    cur.execute(pr_sql)
+    prs = cur.fetchall()
+    
+    p_sql = """SELECT f_name, s_name FROM patient WHERE p_id = {}""".format(p_id)
+    cur.execute(p_sql)
+    p_name = cur.fetchall()
+    
+    costs = calBill(p_id)
+    template = env.get_template('genBill.html')
+    return template.render(name = p_name[0]+" "+p[1], medications = meds, procedures = prs)
+    
+
+@app.route("/endBill/<p_id>", methods = ["GET"])
+def endBill(p_id):
+    timenow = datetime.datetime.now()
+    costs = calBill(p_id)
+    update_sql = """UPDATE bills SET end_time = %s \
+    WHERE start_time = (SELECT MAX(start_time) FROM bills \
+    WHERE p_id = '{}')""".format(p_id)
+    cur.execute(sql, (timenow))
+    db_conn.commit()
+    return '<html><body><h1>Transaction is complete!</h1></body></html>'
+    
+        
+@app.route("/payBill/<p_id>", methods = ["POST"])
+def payBill(p_id):
+    paid = request.form.get("pay")
+    update_sql = """UPDATE bills SET paid = paid + %s \
+    WHERE start_time = (SELECT MAX(start_time) FROM bills \
+    WHERE p_id = '{}')""".format(p_id)
+    cur.execute(update_sql, (paid))
+    db_conn.commit()
+    return '<html><body><h1>Transaction is complete!</h1></body></html>'
+
+def calBill(p_id):
+    bill_sql = """SELECT b_id FROM bills WHERE start_time = \
+    (SELECT MAX(start_time) FROM bills WHERE p_id = {})""".format(p_id)
+    cur.execute(bill_sql)
+    bill_id = cur.fetchall(bill_sql)[0]
+    
+    med_sql = """SELECT p_id, SUM(cost) FROM medications \
+    NATURAL JOIN prescribed NATURAL JOIN patient_history \
+    GROUP BY p_id WHERE p_id = {} AND start_time > \
+    (SELECT max(start_time) FROM bills WHERE p_id = {});""".format(p_id, p_id)
+    cur.execute(med_sql)
+    med_cost = cur.fetchall()
+    
+    pr_sql = """SELECT p_id, sum(cost) FROM procedures NATURAL JOIN \
+    patient_history GROUP BY p_id WHERE p_id = {} AND start_time > \
+    (SELECT MAX(start_time) FROM bills WHERE p_id = {});""".format(p_id, p_id)
+    cur.execute(pr_sql)
+    pr_cost = cur.fetchall()
+    
+    total_cost = med_cost[0][1] + pr_cost[0][1]
+    
+    paid_sql = """SELECT total_paid FROM bills WHERE b_id = {}""".format(bill_id)
+    cur.execute(paid_sql)
+    total_paid = cur.fetchall()[0]
+    
+    return [total_cost, total_paid, total_cost - total_paid] 

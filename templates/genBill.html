@@ -1,0 +1,87 @@
+<html>
+    <head>
+    <style>
+	table, th, td {
+  	border: 1px solid black;
+	}	
+  </style></head>
+    <body>
+        <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <form class="navbar-form navbar-left" action="/search" method= "post">
+                <div class="input-group-btn">
+                <label for="search_type" style="color: white">Search by</label>
+                <select class = "form-control" id="search_type" name = "query_type">
+                    <option value="Patient Name">Patient Name</option>
+                    <option value="Patient ID">Patient ID</option>
+                    <option value="Staff Name">Staff Name</option>
+                    <option value="Staff ID">Staff ID</option>
+                </select>
+
+                <input type="text" class="form-control" placeholder="Search" name="search">
+                <button class="btn btn-default" type="submit">
+                <i class="glyphicon glyphicon-search"></i>
+                </button>
+                </div>
+            </form>
+          </div>
+        </nav>
+        <div class="container staff_info">
+            <div><h1>Bill generated for {{ name }}</h1></div>
+            <div>
+                <h3>Procedures</h3>
+                <table style = 'width: 100%'>
+                    <tr>
+                    <th>Name</th>
+                    <th>Facility</th>
+                    <th>Staff ID</th>
+                    <th>Description</th>
+                    <th>Start time</th>
+                    <th>End time</th>
+                    <th>Cost</th>
+                    </tr>
+                {% for item in procedures %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }}</td>
+                    <td>{{ item[4] }}</td>
+                    <td>{{ item[5] }}</td>
+                    <td>{{ item[6] }}</td>
+                </tr>
+                {% endfor %}
+                </table>
+            </div>
+            <div>
+                <h3>Medications</h3>
+                <table style = 'width: 100%'>
+                    <tr>
+                    <th>Name</th>
+                    <th>Purpose</th>
+                    <th>Dosage</th>
+                    <th>Staff ID</th>
+                    <th>Description</th>
+                    <th>Time</th>
+                    <th>Cost</th>
+                    </tr>
+                {% for item in medications %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }}</td>
+                    <td>{{ item[4] }}</td>
+                    <td>{{ item[5] }}</td>
+                    <td>{{ item[6] }}</td>
+                </tr>
+                {% endfor %}
+                </table>
+            </div>
+            <div><h3>Total cost: {{ cost[0] }}</h3></div>
+            <div><h3>Total paid: {{ cost[1] }}</h3></div>
+            <div><h3>Remaining: {{ cost[2] }}</h3></div>
+        </div>
+
+    </body>
+</html>
