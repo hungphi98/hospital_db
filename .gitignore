@@ -2,3 +2,4 @@ __pycache__
 .idea/*
 server.json
 .DS_Store
+flask_session
