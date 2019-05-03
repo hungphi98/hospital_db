@@ -197,8 +197,17 @@ def patient(p_id):#ahsan
     sqlProc = "select * from (select s_id, pr_id, start_time, end_time, description from patient_history where p_id = {0}) as selectedHist natural join (select s_id, concat(f_name, ' ', l_name) as staff_name from staff) as selectedStaff natural join (select pr_id, name as pr_name, facility from procedures) as selectedProc;".format(p_id)
     cur.execute(sqlProc)
     procedures = cur.fetchall()
+    isActive_sql = """SELECT end_date FROM bills WHERE start_date = \
+    (SELECT MAX(start_date) FROM bills WHERE p_id = {}) AND p_id = {};""".format(p_id, p_id)
+    cur.execute(isActive_sql)
+    if len(cur.fetchall()) == 0:
+        isActive = True
+    else:
+        isActive = False
+    admin = session['admin']
+    print("admin",admin, file = sys.stderr) 
     template = env.get_template('patient.html')
-    return template.render(patient_sid = patient_sid, procedures = procedures)
+    return template.render(patient_sid = patient_sid, procedures = procedures, active = isActive, admin = admin)
 
 @app.route("/startBill/<p_id>", methods = ["POST"])
 def startBill(p_id):#phi
@@ -267,7 +276,7 @@ def payBill(p_id):#phi
 
 def calBill(p_id):#phi
     bill_sql = """SELECT b_id FROM bills WHERE start_date = \
-    (SELECT MAX(start_date) FROM bills WHERE p_id = {})""".format(p_id)
+    (SELECT MAX(start_date) FROM bills WHERE p_id = {}) and p_id = {}""".format(p_id, p_id)
     cur.execute(bill_sql)
     bill_id = cur.fetchall()
     if len(bill_id) == 0:
@@ -278,18 +287,28 @@ def calBill(p_id):#phi
     GROUP BY (p_id, start_time) HAVING p_id = {} AND start_time > \
     (SELECT max(start_date) FROM bills WHERE p_id = {});""".format(p_id, p_id)
     cur.execute(med_sql)
-    med_cost = cur.fetchall()
-    
+    med_cost = cur.fetchone()
+    print(med_cost, file = sys.stderr)
     pr_sql = """SELECT p_id, sum(cost) FROM procedures NATURAL JOIN \
     patient_history GROUP BY (p_id, start_time) HAVING p_id = {} AND start_time > \
     (SELECT MAX(start_date) FROM bills WHERE p_id = {});""".format(p_id, p_id)
     cur.execute(pr_sql)
-    pr_cost = cur.fetchall()
-    
-    total_cost = med_cost[0][1] + pr_cost[0][1]
-    
+    pr_cost = cur.fetchone()
+    if med_cost is None:
+        med_cost = 0
+    else:
+        med_cost = med_cost[1]
+    if pr_cost is None:
+        pr_cost = 0
+    else:
+        pr_cost = pr_cost[1]
+    total_cost = med_cost + pr_cost
+    print(total_cost, file = sys.stderr)
     paid_sql = """SELECT total_paid FROM bills WHERE b_id = {}""".format(bill_id[0])
     cur.execute(paid_sql)
-    total_paid = cur.fetchall()[0]
-    
-    return [total_cost, total_paid[0], total_cost - total_paid[0]] 
+    total_paid = cur.fetchone()
+    if total_paid[0] is None:
+        total_paid = 0
+    else:
+        total_paid = total_paid[0]
+    return [total_cost, total_paid, total_cost - total_paid] 

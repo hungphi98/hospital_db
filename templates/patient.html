@@ -1,5 +1,11 @@
 <html>
-<head></head>
+    <head>
+    <style>
+	table, th, td {
+  	border: 1px solid black;
+	}	
+  </style>
+    </head>
 <body>
     <div>
         <form action = "/search" method = "POST">
@@ -46,7 +52,7 @@
             </div>
         </div>
         <div class="container patients">
-           <span>Procedures Applied</span>
+           <h3>Procedures Applied</h3>
            <div>
                 <table style = 'width: 100%'>
                     <tr>
@@ -70,6 +76,19 @@
                 </table>
             </div>
         </div>
+    <div>
+        {% if 'admin' in admin %}
+        {% if active == True %}
+        <form action = "/startBill/{{ patient_sid[0][0] }}" method = "post">
+            <input type = "submit" value = "Register patient" name = "register"/>
+        </form>
+        {% else %}
+        <form action = "/showBill/{{ patient_sid[0][0] }}" method = "get">
+             <input type = "submit" value = "Discharge patient" name = "register"/>
+        </form>
+        {% endif %}
+        {% endif %}
+    </div>
 
 </body>
 </html>
