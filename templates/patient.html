@@ -78,7 +78,7 @@
         </div>
     <div>
         {% if 'admin' in admin %}
-        {% if active == True %}
+        {% if active == False %}
         <form action = "/startBill/{{ patient_sid[0][0] }}" method = "post">
             <input type = "submit" value = "Register patient" name = "register"/>
         </form>

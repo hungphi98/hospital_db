@@ -205,8 +205,8 @@ def patient(p_id):#ahsan
         isActive = True
     else:
         isActive = False
+    print(x, file = sys.stderr)
     admin = session['admin']
-    
     template = env.get_template('patient.html')
     return template.render(patient_sid = patient_sid, procedures = procedures, active = isActive, admin = admin)
 
