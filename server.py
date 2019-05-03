@@ -54,6 +54,7 @@ def login():
         if x is not None:
             session['d_id'] = x[0]
             session['name'] = x[1]
+            session['admin'] = x[5]
             return redirect("/profile")
         else:
             flash("Wrong username or password")
@@ -64,16 +65,17 @@ def login():
 def profile():
     d_id = session['d_id']
     name = session['name']
+    admin = session['admin']
     sql = """SELECT patient.p_id, patient.f_name, patient.l_name, patient.dob, patient.sex \
     FROM staff NATURAL JOIN patient_history INNER JOIN patient \
     ON patient_history.p_id = patient.p_id WHERE d_id = {} ORDER BY end_time;""".format(d_id)
     cur.execute(sql)
     patients = cur.fetchall()
-    print(patients, file = sys.stderr)
+    print(admin)
     if len(patients) > 5:
         patients = patients[:5]
     template = env.get_template('profile.html')
-    return template.render(name = name, patients = patients)
+    return template.render(name = name, patients = patients, admin = admin)
 @app.route("/search", methods = ["POST"])
 def search():#phi
     query_type = request.form.get("query_type")
