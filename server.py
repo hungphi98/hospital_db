@@ -187,10 +187,10 @@ def staff(s_id):#ahsan
 
 @app.route("/patient/<p_id>", methods = ["GET"])
 def patient(p_id):#ahsan
-    sql = "SELECT * FROM patient WHERE p_id = {0};".format(p_id)
+    sql = "SELECT p_id, f_name, l_name, date_part('year', age(dob)) as age, dob, address, phone_number, sex, height, weight FROM patient WHERE p_id = {0};".format(p_id)
     cur.execute(sql)
     patient_sid = cur.fetchall()
-    sqlProc = "select * from (select s_id, pr_id, start_time, end_time, description from patient_history where p_id = {0}) as selectedHist natural join (select s_id, f_name, l_name from staff) as selectedStaff natural join (select pr_id, name as pr_name, facility from procedures) as selectedProc;".format(p_id)
+    sqlProc = "select * from (select s_id, pr_id, start_time, end_time, description from patient_history where p_id = {0}) as selectedHist natural join (select s_id, concat(f_name, ' ', l_name) as staff_name from staff) as selectedStaff natural join (select pr_id, name as pr_name, facility from procedures) as selectedProc;".format(p_id)
     cur.execute(sqlProc)
     procedures = cur.fetchall()
     template = env.get_template('patient.html')
