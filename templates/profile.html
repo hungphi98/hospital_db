@@ -46,7 +46,7 @@
 			</tr>
                 {% for item in patients %}
 		<tr>
-			<td><input type = "submit" name = "patient" value = {{ item[0] }}></input></td>
+			<td><p><a href="/patient/{{ item[0] }}">{{item[0]}}</a></p></td>
 			<td>{{ item[1] }}</td>
 			<td>{{ item[2] }}</td>
 			<td>{{ item[3] }}</td>
