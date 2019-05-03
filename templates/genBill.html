@@ -44,7 +44,7 @@
                 <tr>
                     <td>{{ item[0] }}</td>
                     <td>{{ item[1] }}</td>
-                    <td>{{ item[2] }}</td>
+                    <td><p><a href = "/staff/{{ item[2] }}">{{ item[2] }}</a></p></td>
                     <td>{{ item[3] }}</td>
                     <td>{{ item[4] }}</td>
                     <td>{{ item[5] }}</td>
@@ -70,7 +70,7 @@
                     <td>{{ item[0] }}</td>
                     <td>{{ item[1] }}</td>
                     <td>{{ item[2] }}</td>
-                    <td>{{ item[3] }}</td>
+                    <td><p><a href = "/staff/{{ item[3] }}">{{ item[3] }}</a></p></td>
                     <td>{{ item[4] }}</td>
                     <td>{{ item[5] }}</td>
                     <td>{{ item[6] }}</td>
@@ -81,6 +81,13 @@
             <div><h3>Total cost: {{ cost[0] }}</h3></div>
             <div><h3>Total paid: {{ cost[1] }}</h3></div>
             <div><h3>Remaining: {{ cost[2] }}</h3></div>
+            <div>
+                <form action = "/payBill/{{ p_id }}" method = "post">
+                    <label for="Pay">Pay</label>
+                    <input type = "text" id = "Pay" name = "pay"/>
+                    <input type = "submit" value = "Pay"/>
+                </form>
+            </div>
         </div>
 
     </body>

@@ -38,7 +38,7 @@
 
 <div class="container">
    <div>
-        <form action = "/staff" method = "post">
+        
 		<table style = 'width: 100%'>
 			<tr>
 				<th>Staff ID</th>
@@ -48,14 +48,14 @@
 			</tr>
                 {% for item in staffs %}
 		<tr>
-			<td><input type = "submit" name = "staff" value = {{ item[0] }}></input></td>
+            <td><p><a href = "/staff/{{ item[0] }}"></a></p></td>
 			<td>{{ item[1] }}</td>
 			<td>{{ item[2] }}</td>
 			<td>{{ item[6] }}</td>
 		</tr>
                 {% endfor %}
 		</table>
-        </form>
+        
     </div>
 </div>
 
