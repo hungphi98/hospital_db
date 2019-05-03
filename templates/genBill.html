@@ -88,10 +88,18 @@
                     <input type = "submit" value = "Pay"/>
                 </form>
             </div>
+            {% if active == True %}
             {% if cost[2] == 0 %}
             <div>
                 <form action = "/endBill/{{ p_id }}" method = "post">
                     <input type = "submit" value = "Discharge patient"/>
+                </form>
+            </div>
+            {% endif %}
+            {% else %}
+            <div>
+                <form action = "/startBill/{{ p_id }}" method = "post">
+                    <input type = "submit" value = "Register Patient"/>
                 </form>
             </div>
             {% endif %}

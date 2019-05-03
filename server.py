@@ -200,12 +200,13 @@ def patient(p_id):#ahsan
     isActive_sql = """SELECT end_date FROM bills WHERE start_date = \
     (SELECT MAX(start_date) FROM bills WHERE p_id = {}) AND p_id = {};""".format(p_id, p_id)
     cur.execute(isActive_sql)
-    if len(cur.fetchall()) == 0:
+    x = cur.fetchone()
+    if x[0] is None:
         isActive = True
     else:
         isActive = False
     admin = session['admin']
-    print("admin",admin, file = sys.stderr) 
+    
     template = env.get_template('patient.html')
     return template.render(patient_sid = patient_sid, procedures = procedures, active = isActive, admin = admin)
 
@@ -215,7 +216,7 @@ def startBill(p_id):#phi
     timenow = datetime.datetime.now()
     cur.execute(sql, [p_id, timenow])
     db_conn.commit()
-    return redirect("/patient/"+p_id)
+    return redirect("/showBill/"+p_id)
 
 @app.route("/showBill/<p_id>", methods = ["GET"])
 def showBill(p_id):#phi
@@ -233,14 +234,23 @@ def showBill(p_id):#phi
     FROM bills WHERE p_id = {});""".format(p_id, p_id)
     cur.execute(pr_sql)
     prs = cur.fetchall()
-    
     p_sql = """SELECT f_name, l_name FROM patient WHERE p_id = {}""".format(p_id)
     cur.execute(p_sql)
     p_name = cur.fetchall()
     
     costs = calBill(p_id)
+    isActive_sql = """SELECT end_date FROM bills WHERE start_date = \
+    (SELECT MAX(start_date) FROM bills WHERE p_id = {}) AND p_id = {};""".format(p_id, p_id)
+    cur.execute(isActive_sql)
+    x = cur.fetchone()
+    print(x, file = sys.stderr)
+    if x[0] is None:
+        isActive = True
+    else:
+        isActive = False
     template = env.get_template('genBill.html')
-    return template.render(name = p_name[0][0]+" "+p_name[0][1], medications = meds, procedures = prs, cost = costs, p_id = p_id)
+    return template.render(name = p_name[0][0]+" "+p_name[0][1], medications = meds,\
+                           procedures = prs, cost = costs, p_id = p_id, active = isActive)
     
 
 @app.route("/endBill/<p_id>", methods = ["POST"])
@@ -276,10 +286,10 @@ def payBill(p_id):#phi
 
 def calBill(p_id):#phi
     bill_sql = """SELECT b_id FROM bills WHERE start_date = \
-    (SELECT MAX(start_date) FROM bills WHERE p_id = {}) and p_id = {}""".format(p_id, p_id)
+    (SELECT MAX(start_date) FROM bills WHERE p_id = {})""".format(p_id, p_id)
     cur.execute(bill_sql)
-    bill_id = cur.fetchall()
-    if len(bill_id) == 0:
+    bill_id = cur.fetchone()
+    if bill_id[0] == 0:
         return [0,0,0]
     bill_id = bill_id[0]
     med_sql = """SELECT p_id, SUM(cost) FROM medications \
@@ -304,7 +314,7 @@ def calBill(p_id):#phi
         pr_cost = pr_cost[1]
     total_cost = med_cost + pr_cost
     print(total_cost, file = sys.stderr)
-    paid_sql = """SELECT total_paid FROM bills WHERE b_id = {}""".format(bill_id[0])
+    paid_sql = """SELECT total_paid FROM bills WHERE b_id = {}""".format(bill_id)
     cur.execute(paid_sql)
     total_paid = cur.fetchone()
     if total_paid[0] is None:
