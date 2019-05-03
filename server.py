@@ -89,7 +89,9 @@ def search():#phi
         template = env.get_template('patient_search_result.html')
         return template.render(patients = patients)
     elif query_type == "Patient ID":
-        sql = "SELECT * FROM patient WHERE p_id = {}".format(info)
+        sql = "select * from patient"
+        if bool(info.strip()):
+            sql += " where p_id = {0}".format(info)
         cur.execute(sql)
         patients = cur.fetchall()
         template = env.get_template('patient_search_result.html')
@@ -102,7 +104,9 @@ def search():#phi
         template = env.get_template('search_result.html')
         return template.render(staffs = staff)
     elif query_type == "Staff ID":
-        sql = "SELECT * FROM staff WHERE s_id = {}".format(info)
+        sql = "select * from staff"
+        if bool(info.strip()):
+            sql += " where s_id = {0}".format(info)
         cur.execute(sql)
         staff = cur.fetchall()
         print(staff, file = sys.stderr)
