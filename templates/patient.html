@@ -13,5 +13,63 @@
             <input class="form-control" name="info" placeholder="Search">
         </form>
     </div>
+        <div class="container patient_info">
+           <div>
+                <table style = 'width: 100%'>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Age</th>
+                        <th>Date Of Birth</th>
+                        <th>Address</th>
+                        <th>Phone Number</th>
+                        <th>Sex</th>
+                        <th>Height</th>
+                        <th>Weight</th>
+                    </tr>
+                        {% for item in patient_sid %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }}</td>
+                    <td>{{ item[4] }}</td>
+                    <td>{{ item[5] }}</td>
+                    <td>{{ item[6] }}</td>
+                    <td>{{ item[7] }}</td>
+                    <td>{{ item[8] }}</td>
+                    <td>{{ item[9] }}</td>
+                </tr>
+                        {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="container patients">
+           <span>Procedures Applied</span>
+           <div>
+                <table style = 'width: 100%'>
+                    <tr>
+                        <th>Procedure</th>
+                        <th>Head Staff Name</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Facility</th>
+                        <th>Description</th>
+                    </tr>
+                {% for procedure in procedures %}
+                <tr>
+                    <td>{{ procedure[6] }}</td>
+                    <td>{{ procedure[5] }}</td>
+                    <td>{{ procedure[2] }}</td>
+                    <td>{{ procedure[3] }}</td>
+                    <td>{{ procedure[7] }}</td>
+                    <td>{{ procedure[4] }}</td>
+                </tr>
+                {% endfor %}
+                </table>
+            </div>
+        </div>
+
 </body>
 </html>
