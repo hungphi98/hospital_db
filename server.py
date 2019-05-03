@@ -200,7 +200,7 @@ def patient(p_id):#ahsan
 def startBill(p_id):#phi
     sql = """INSERT INTO bills (p_id, start_date) VALUES (%s, %s)"""
     timenow = datetime.datetime.now()
-    cur.execute(sql, (p_id, timenow))
+    cur.execute(sql, [p_id, timenow])
     db_conn.commit()
     return redirect("/patient/"+p_id)
 
@@ -230,14 +230,14 @@ def showBill(p_id):#phi
     return template.render(name = p_name[0][0]+" "+p_name[0][1], medications = meds, procedures = prs, cost = costs, p_id = p_id)
     
 
-@app.route("/endBill/<p_id>", methods = ["GET"])
+@app.route("/endBill/<p_id>", methods = ["POST"])
 def endBill(p_id):#phi
     timenow = datetime.datetime.now()
     costs = calBill(p_id)
-    update_sql = """UPDATE bills SET end_time = %s \
-    WHERE start_time = (SELECT MAX(start_time) FROM bills \
+    update_sql = """UPDATE bills SET end_date = %s \
+    WHERE start_date = (SELECT MAX(start_date) FROM bills \
     WHERE p_id = '{}')""".format(p_id)
-    cur.execute(sql, (timenow))
+    cur.execute(update_sql, [timenow])
     db_conn.commit()
     return '<html><body><h1>Transaction is complete!</h1></body></html>'
     
@@ -259,7 +259,7 @@ def payBill(p_id):#phi
     WHERE p_id = '{}')""".format( p_id)
     cur.execute(update_sql, [paid, costs[0]])
     db_conn.commit()
-    return '<html><body><h1>Transaction is complete!</h1></body></html>'
+    return redirect("showBill/"+p_id)
 
 def calBill(p_id):#phi
     bill_sql = """SELECT b_id FROM bills WHERE start_date = \
