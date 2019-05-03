@@ -108,9 +108,13 @@ INSERT into ward (p_id, d_id, arrival, departure, total_days, cost_per_day, tota
 
 
 /*
-select total_cost from ward where p_id =1;   #Gives cost of durations person stay in certain ward
-select cost from patient_history natural join procedures where p_id =1; #Gives cost of a procedure
-select cost from medications natural join prescribed where p_id =1; #Gives cost of medications
 
-select ((select total_cost from ward where p_id=1) + (select cost from patient_history natural join procedures where p_id=1) + (select cost from medications natural join prescribed where p_id=1)) as final_cost;
+
+
+select p_id,(extract(day from "departure" - "arrival") * cost_per_day) as total_cost from ward where p_id =1;
+
+select p_id, m_id, cost from  (select * from medications natural join prescribed) as x natural join patient_history where p_id = 1;
+
+select p_id, cost, name from patient_history natural join procedures where p_id = 1 and start_time between '2000-08-01 10:00:00' AND '2020-09-20 10:00:00';
+select p_id, sum(cost) from patient_history natural join procedures where p_id = 1 group by p_id;
 */
