@@ -41,8 +41,6 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-d_id = 0
-name = ""
 @app.route('/', methods = ["GET","POST"])
 def login():#phi
     if request.method == "GET":
@@ -129,7 +127,53 @@ def createProcedure():#jordan
         db_conn.commit()
         return redirect("/")
 
+@app.route("/addHistory/<p_id>", methods = ["GET"])
+def addHistory(p_id):
+    namesql = """SELECT f_name, l_name FROM patient WHERE p_id = {}""".format(p_id)
+    cur.execute(namesql)
+    names = cur.fetchone()
+    procedure_sql = """SELECT pr_id, name FROM procedures;"""
+    cur.execute(procedure_sql)
+    procedure_names = cur.fetchall()
+    med_sql = """SELECT m_id, name FROM medications""";
+    cur.execute(med_sql)
+    meds = cur.fetchall()
+    print(meds, procedure_names, file = sys.stderr)
+    template = env.get_template("addHistory.html")
+    return template.render(name = names[0] + " " + names[1], p_id = p_id, \
+                          procedure_names = procedure_names, medications = meds)
 
+@app.route("/addProcedure/<p_id>", methods = ["POST"])
+def addProcedure(p_id):
+    s_id = session['d_id']
+    pr_id = request.form.get("procedurename")
+    description = request.form.get("description")
+    start_date = request.form.get("start-date")
+    end_date = request.form.get("end-date")
+    sql = """INSERT INTO patient_history (pr_id, p_id, s_id, start_time, end_time, description) \
+    VALUES (%s, %s, %s, %s, %s, %s)"""
+    cur.execute(sql, [pr_id, p_id, s_id, start_date, end_date, description])
+    db_conn.commit()
+    return redirect("showBill/"+p_id)
+
+@app.route("/addMedication/<p_id>", methods = ["POST"])
+def addMedication(p_id):
+    s_id = session['d_id']
+    m_id = request.form.get("medications")
+    dosage = request.form.get("dosage")
+    today = datetime.datetime.now()
+    hist_sql = """INSERT INTO patient_history (p_id, s_id, start_time, end_time) \
+    VALUES (%s, %s, %s, %s)"""
+    cur.execute(hist_sql, [p_id, s_id, today, today])
+    db_conn.commit()
+    tmp_sql = """SELECT MAX(ph_id) FROM patient_history;"""
+    cur.execute(tmp_sql)
+    max_id = cur.fetchone()[0]
+    pres_sql = """INSERT INTO prescribed (ph_id, m_id, dosage) \
+    VALUES (%s, %s, %s)"""
+    cur.execute(pres_sql, (max_id, m_id, dosage))
+    db_conn.commit()
+    return redirect("showBill/"+p_id)
 
 @app.route("/createPatient", methods = ["POST", "GET"])
 def createPatient():#jordan

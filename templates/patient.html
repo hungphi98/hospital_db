@@ -77,6 +77,11 @@
             </div>
         </div>
     <div>
+        <form action = "/addHistory/{{ patient_sid[0][0] }}" method = "get">
+            <input type = "submit" value = "Add procedure or medication" name = "add" />
+        </form>
+    </div>
+    <div>
         {% if 'admin' in admin %}
         {% if active == False %}
         <form action = "/startBill/{{ patient_sid[0][0] }}" method = "post">

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>add to patient history</title>
+    </head>
+    <body>
+      <div>
+          <h3>Add procedure for {{ name }}</h3>
+          <h5>Patient id: {{ p_id }}</h5>
+       </div>
+      <form action="/addProcedure/{{ p_id }}" method="post">
+          
+            <div>
+                <h3>Procedures</h3>
+                <select class = "form-control" id = "procedurename" name = "procedurename">
+                    {% for pname in procedure_names %}
+                    <option value = "{{ pname[0] }}">{{ pname[1] }}</option>
+                    {% endfor %}
+                </select>
+                <h3>Start date</h3>
+                <input type = "text" name = "start-date" placeholder = "YYYY-MM-DD"/>
+                <h3>End date</h3>
+                <input type = "text" name = "end-date" placeholder = "YYYY-MM-DD"/>
+                <h3>Description</h3>
+                <input type = "text" name = "description"/>
+          </div>
+          <input type = "submit" value = "Add procedure"/>
+        </form>
+        <form action = "/addMedication/{{ p_id }}" method = "post">
+            <div>
+                <h3>Medication name</h3>
+                <select class = "form-control" id = "medications" name = "medications">
+                    {% for mname in medications %}
+                    <option value = "{{ mname[0] }}">{{ mname[1] }}</option>
+                    {% endfor %}
+                </select>
+                <h3>Dosage</h3>
+                <input type = "text" name = "dosage"/>
+            </div>
+            <input type = "submit" value = "Add medication"/>
+        </form>
+    </body>
+</html>
