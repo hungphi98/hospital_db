@@ -19,6 +19,12 @@
             <input class="form-control" name="info" placeholder="Search">
         </form>
     </div>
+    <div>
+        <h3>Treated by:</h3>
+        {% for s in staff %}
+        <h4>{{ s[0] }} {{ s[1] }}, staff_id: {{ s[2] }}</h4>
+        {% endfor %}
+    </div>
         <div class="container patient_info">
            <div>
                 <table style = 'width: 100%'>
@@ -77,9 +83,17 @@
             </div>
         </div>
     <div>
+        {% if active == True %}
+        {% if treated == True %}
         <form action = "/addHistory/{{ patient_sid[0][0] }}" method = "get">
             <input type = "submit" value = "Add procedure or medication" name = "add" />
         </form>
+        {% else %}
+        <form action = "/takePatient/{{ patient_sid[0][0] }}", method = "get">
+            <input type = "submit" value = "Treat this patient" name = "treat />
+        </form>
+        {% endif %}
+        {% endif %}
     </div>
     <div>
         {% if 'admin' in admin %}
@@ -89,7 +103,7 @@
         </form>
         {% else %}
         <form action = "/showBill/{{ patient_sid[0][0] }}" method = "get">
-             <input type = "submit" value = "Discharge patient" name = "register"/>
+             <input type = "submit" value = "Discharge patient" name = "discharge"/>
         </form>
         {% endif %}
         {% endif %}

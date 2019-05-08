@@ -128,7 +128,7 @@ def createProcedure():#jordan
         return redirect("/")
 
 @app.route("/addHistory/<p_id>", methods = ["GET"])
-def addHistory(p_id):
+def addHistory(p_id):#phi
     namesql = """SELECT f_name, l_name FROM patient WHERE p_id = {}""".format(p_id)
     cur.execute(namesql)
     names = cur.fetchone()
@@ -143,8 +143,16 @@ def addHistory(p_id):
     return template.render(name = names[0] + " " + names[1], p_id = p_id, \
                           procedure_names = procedure_names, medications = meds)
 
+@app.route("/takePatient/<p_id>", methods = ["GET"])
+def takePatient(p_id):#phi
+    s_id = session['d_id']
+    in_sql = """INSERT INTO treats (p_id, s_id) VALUES (%s, %s);"""
+    cur.execute(in_sql, (p_id, s_id))
+    db_conn.commit()
+    return redirect("/addHistory/"+p_id)
+    
 @app.route("/addProcedure/<p_id>", methods = ["POST"])
-def addProcedure(p_id):
+def addProcedure(p_id):#phi
     s_id = session['d_id']
     pr_id = request.form.get("procedurename")
     description = request.form.get("description")
@@ -157,7 +165,7 @@ def addProcedure(p_id):
     return redirect("showBill/"+p_id)
 
 @app.route("/addMedication/<p_id>", methods = ["POST"])
-def addMedication(p_id):
+def addMedication(p_id):#phi
     s_id = session['d_id']
     m_id = request.form.get("medications")
     dosage = request.form.get("dosage")
@@ -234,7 +242,7 @@ def staff(s_id):#ahsan
     #return "<h1>{0}</h1>".format(s_id)
 
 @app.route("/patient/<p_id>", methods = ["GET"])
-def patient(p_id):#ahsan
+def patient(p_id):#ahsan, phi
     sql = "SELECT p_id, f_name, l_name, date_part('year', age(dob)) as age, dob, address, phone_number, sex, height, weight FROM patient WHERE p_id = {0};".format(p_id)
     cur.execute(sql)
     patient_sid = cur.fetchall()
@@ -249,10 +257,21 @@ def patient(p_id):#ahsan
         isActive = True
     else:
         isActive = False
-    print(x, file = sys.stderr)
     admin = session['admin']
+    s_id = session['d_id']
+    treat_sql = """SELECT f_name, l_name, s_id FROM treats NATURAL JOIN staff WHERE p_id = {}""".format(p_id)
+    cur.execute(treat_sql)
+    staff = cur.fetchall()
+    SPSql = """SELECT s_id FROM treats WHERE p_id = {} AND s_id = {}""".format(p_id, s_id)
+    cur.execute(SPSql)
+    s_p = cur.fetchall()
+    if len(s_p) == 0:
+        treated = False
+    else:
+        treated = True
     template = env.get_template('patient.html')
-    return template.render(patient_sid = patient_sid, procedures = procedures, active = isActive, admin = admin)
+    return template.render(patient_sid = patient_sid, procedures = procedures, active = isActive, \
+                           admin = admin, treated = treated, staff = staff)
 
 @app.route("/startBill/<p_id>", methods = ["POST"])
 def startBill(p_id):#phi
