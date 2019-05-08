@@ -67,7 +67,7 @@ def profile():#phi
     admin = session['admin']
     sql = """SELECT patient.p_id, patient.f_name, patient.l_name, patient.dob, patient.sex \
     FROM staff NATURAL JOIN patient_history INNER JOIN patient \
-    ON patient_history.p_id = patient.p_id WHERE d_id = {} ORDER BY end_time;""".format(d_id)
+    ON patient_history.p_id = patient.p_id WHERE d_id = {} ORDER BY end_time DESC;""".format(d_id)
     cur.execute(sql)
     patients = cur.fetchall()
     print(admin)
@@ -191,14 +191,13 @@ def createPatient():#jordan
     elif request.method == "POST":
         fname = request.form.get("fname")
         lname = request.form.get("lname")
-        age = request.form.get("age")
         dob = request.form.get("dob")
         address = request.form.get("address")
         phone = request.form.get("phone")
         sex = request.form.get("sex")
         height = request.form.get("height")
         weight = request.form.get("weight")
-        cur.execute("""INSERT into patient (f_name, l_name, age, dob, address, phone_number, sex, height, weight) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);""",(fname, lname, age, dob, address, phone, sex, height, weight))
+        cur.execute("""INSERT into patient (f_name, l_name, dob, address, phone_number, sex, height, weight) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);""",(fname, lname, dob, address, phone, sex, height, weight))
         db_conn.commit()
         return redirect("/profile")
 
@@ -253,10 +252,11 @@ def patient(p_id):#ahsan, phi
     (SELECT MAX(start_date) FROM bills WHERE p_id = {}) AND p_id = {};""".format(p_id, p_id)
     cur.execute(isActive_sql)
     x = cur.fetchone()
-    if x[0] is None:
+    if x is None or x[0] is None:
         isActive = True
     else:
         isActive = False
+    print(x, file = sys.stderr)
     admin = session['admin']
     s_id = session['d_id']
     treat_sql = """SELECT f_name, l_name, s_id FROM treats NATURAL JOIN staff WHERE p_id = {}""".format(p_id)
@@ -352,8 +352,15 @@ def calBill(p_id):#phi
     (SELECT MAX(start_date) FROM bills WHERE p_id = {})""".format(p_id, p_id)
     cur.execute(bill_sql)
     bill_id = cur.fetchone()
-    if bill_id[0] == 0:
-        return [0,0,0]
+    if bill_id is None:
+        b_sql = """INSERT INTO bills (p_id, start_date) VALUES (%s, %s)"""
+        now = datetime.datetime.now()
+        cur.execute(b_sql, [p_id, now])
+        db_conn.commit()
+        calBill(p_id)
+    else:
+        if bill_id[0] == 0:
+            return [0,0,0]
     bill_id = bill_id[0]
     med_sql = """SELECT p_id, SUM(cost) FROM medications \
     NATURAL JOIN prescribed NATURAL JOIN patient_history \
